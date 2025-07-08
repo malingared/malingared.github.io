@@ -1,0 +1,935 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BookNest - Your Online Bookstore</title>
+    <!-- Tailwind CSS CDN for modern styling and responsiveness -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts for Merriweather (Headings) and Open Sans (Body Text) -->
+    <link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@400;700&family=Open+Sans:wght=400;600&display=swap" rel="stylesheet">
+    <style>
+        /* Custom styles for the specified fonts and colors */
+        body {
+            font-family: 'Open Sans', sans-serif;
+            background-color: #F8F8F8; /* Light Gray/White for readability */
+            color: #333;
+        }
+        h1, h2, h3, h4, h5, h6 {
+            font-family: 'Merriweather', serif;
+            color: #1E3A8A; /* Primary: Deep Blue */
+        }
+        .primary-bg {
+            background-color: #1E3A8A; /* Primary: Deep Blue */
+        }
+        .secondary-bg {
+            background-color: #FDBA74; /* Secondary: Light Orange */
+        }
+        .primary-text {
+            color: #1E3A8A; /* Primary: Deep Blue */
+        }
+        .secondary-text {
+            color: #FDBA74; /* Secondary: Light Orange */
+        }
+        .btn-primary {
+            @apply bg-blue-700 hover:bg-blue-800 text-white font-bold py-2 px-4 rounded-lg shadow-md transition duration-300 ease-in-out;
+        }
+        .btn-secondary {
+            @apply bg-orange-500 hover:bg-orange-600 text-white font-bold py-2 px-4 rounded-lg shadow-md transition duration-300 ease-in-out;
+        }
+        /* Hide all page sections by default, JavaScript will show the active one */
+        .page-section {
+            display: none;
+        }
+        .page-section.active {
+            display: block;
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col">
+    <!-- Header Section -->
+    <header class="primary-bg text-white p-4 shadow-lg">
+        <div class="container mx-auto flex flex-col md:flex-row justify-between items-center">
+            <!-- Logo: Simple open book with a shopping cart icon merged into it -->
+            <div class="flex items-center text-3xl font-bold mb-4 md:mb-0">
+                📚🛒 BookNest
+            </div>
+            <!-- Navigation -->
+            <nav class="secondary-bg rounded-full p-2 flex flex-wrap justify-center md:justify-end gap-2 md:gap-4">
+                <button class="primary-text font-semibold px-4 py-2 rounded-full hover:bg-white transition duration-200" onclick="showPage('home')">Home</button>
+                <button class="primary-text font-semibold px-4 py-2 rounded-full hover:bg-white transition duration-200" onclick="showPage('shop')">Shop/Books</button>
+                <!-- Book Details button is now dynamic and linked from shop/home page -->
+                <button class="primary-text font-semibold px-4 py-2 rounded-full hover:bg-white transition duration-200" onclick="showPage('cart-checkout')">Cart & Checkout</button>
+                <button class="primary-text font-semibold px-4 py-2 rounded-full hover:bg-white transition duration-200" onclick="showPage('contact')">Contact Us</button>
+                <button class="primary-text font-semibold px-4 py-2 rounded-full hover:bg-white transition duration-200" onclick="showPage('login-register')">Login/Register</button>
+                <button class="primary-text font-semibold px-4 py-2 rounded-full hover:bg-white transition duration-200" onclick="showPage('order-history')">Order History</button>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Main Content Area -->
+    <main class="flex-grow container mx-auto p-4 md:p-8">
+        <!-- Home Page Section -->
+        <section id="home" class="page-section active bg-white rounded-lg shadow-md p-6 mb-8">
+            <h2 class="text-3xl font-bold mb-6 text-center">Welcome to BookNest!</h2>
+            <p class="text-center text-lg mb-8">Your online destination for academic, fiction, and professional reads. Discover your next favorite book today!</p>
+
+            <!-- Search Bar -->
+            <div class="mb-8 flex flex-col sm:flex-row gap-4 items-center justify-center">
+                <input type="text" placeholder="Search by title, author, or ISBN..."
+                       class="w-full sm:w-2/3 p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                <button class="btn-primary w-full sm:w-auto">Search Books</button>
+            </div>
+
+            <!-- Featured Books -->
+            <h3 class="text-2xl font-semibold mb-4 primary-text">Featured Books</h3>
+            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 mb-8">
+                <!-- Example Book Item 1 -->
+                <div class="bg-gray-50 p-4 rounded-lg shadow-sm text-center">
+                    <img src="Assets/IMG-20250708-WA0016.jpg" alt="The Great Novel" width="668" height="696" class="mx-auto mb-3 rounded-md">
+                    <h4 class="text-xl font-semibold primary-text">Project Management Essentials</h4>
+                    <p class="text-gray-600">JB WOLFF</p>
+                    <p class="text-lg font-bold secondary-text mt-2">$24.99</p>
+                    <button class="btn-secondary mt-4" style="background-color: blue; color: white; padding: 10px 15px; border-radius: 8px;" onclick="addToCart('book1', 'The Great Novel', 24.99)">Add to Cart</button>					
+                    <button class="btn-primary mt-2 text-sm" onclick="showBookDetails('book1', 'The Great Novel', 'Jane Doe', 24.99, 'Fiction, Drama', '978-0-123456-78-9', 'A compelling story of self-discovery and resilience.')">Details</button>
+                </div>
+                <!-- Example Book Item 2 -->
+                <div class="bg-gray-50 p-4 rounded-lg shadow-sm text-center">
+                    <img src="Assets/IMG-20250708-WA0012.jpg" alt="Academic Guide" width="1294" height="1920" class="mx-auto mb-3 rounded-md">
+                    <h4 class="text-xl font-semibold primary-text">Pride and Prejudice</h4>
+                    <p class="text-gray-600">Keira Knightley</p>
+                    <p class="text-lg font-bold secondary-text mt-2">$39.99</p>
+                    <button class="btn-secondary mt-4" style="background-color: blue; color: white; padding: 10px 15px; border-radius: 8px;" onclick="addToCart('book2', 'Academic Guide', 39.99)">Add to Cart</button>
+                    <button class="btn-primary mt-2 text-sm" onclick="showBookDetails('book2', 'Academic Guide', 'John Smith', 39.99, 'Education, Reference', '978-0-987654-32-1', 'An essential guide for students navigating university life.')">Details</button>
+                </div>
+                <!-- Example Book Item 3 -->
+                <div class="bg-gray-50 p-4 rounded-lg shadow-sm text-center">
+                    <img src="Assets/IMG-20250708-WA0018.jpg" alt="Kids Adventure" width="1042" height="1600" class="mx-auto mb-3 rounded-md">
+                    <h4 class="text-xl font-semibold primary-text">Art of war</h4>
+                    <p class="text-gray-600">Ralph D Sawyer</p>
+                    <p class="text-lg font-bold secondary-text mt-2">$12.50</p>
+                    <button class="btn-secondary mt-4"style="background-color: blue; color: white; padding: 10px 15px; border-radius: 8px;" onclick="addToCart('book3', 'Kids Adventure', 12.50)">Add to Cart</button>
+                    <button class="btn-primary mt-2 text-sm" onclick="showBookDetails('book3', 'Kids Adventure', 'Emily White', 12.50, 'Children\'s, Adventure', '978-1-111111-11-1', 'A fun-filled adventure for young readers.')">Details</button>
+                </div>
+                <!-- Example Book Item 4 -->
+                <div class="bg-gray-50 p-4 rounded-lg shadow-sm text-center">
+                  <img src="Assets/IMG-20250708-WA0020.jpg" alt="Tech Trends" class="mx-auto mb-3 rounded-md">
+<h4 class="text-xl font-semibold primary-text">To kill A Mockingbird</h4>
+                    <p class="text-gray-600">Harper Lee</p>
+                    <p class="text-lg font-bold secondary-text mt-2">$45.00</p>
+                    <button class="btn-secondary mt-4" style="background-color: blue; color: white; padding: 10px 15px; border-radius: 8px;" onclick="addToCart('book4', 'Tech Trends 2025', 45.00)">Add to Cart</button>
+                    <button class="btn-primary mt-2 text-sm" onclick="showBookDetails('book4', 'Tech Trends 2025', 'David Green', 45.00, 'Technology, Future', '978-2-222222-22-2', 'Explore the cutting-edge technologies shaping our future.')">Details</button>
+                </div>
+                <!-- New Featured Book 5 -->
+                <div class="bg-gray-50 p-4 rounded-lg shadow-sm text-center">
+                    <img src="Assets/IMG-20250708-WA0015.jpg" alt="Fantasy Quest" class="mx-auto mb-3 rounded-md">
+                    <h4 class="text-xl font-semibold primary-text">1984</h4>
+                    <p class="text-gray-600">George Orwell</p>
+                    <p class="text-lg font-bold secondary-text mt-2">$28.75</p>
+                    <button class="btn-secondary mt-4" style="background-color: blue; color: white; padding: 10px 15px; border-radius: 8px;" onclick="addToCart('book5', 'The Last Dragon\'s Quest', 28.75)">Add to Cart</button>
+                    <button class="btn-primary mt-2 text-sm" onclick="showBookDetails('book5', 'The Last Dragon\'s Quest', 'Arthurian Legends', 28.75, 'Fantasy, Epic', '978-3-333333-33-3', 'An epic journey to find the last dragon and save the realm.')">Details</button>
+                </div>
+                <!-- New Featured Book 6 -->
+                <div class="bg-gray-50 p-4 rounded-lg shadow-sm text-center">
+                    <img src="Assets/IMG-20250708-WA0017.jpg" alt="Mystery Novel" class="mx-auto mb-3 rounded-md">
+                    <h4 class="text-xl font-semibold primary-text">Harry Potter and Philosopher Stone</h4>
+                    <p class="text-gray-600">by Agatha Christie Jr.</p>
+                    <p class="text-lg font-bold secondary-text mt-2">$19.50</p>
+                    <button class="btn-secondary mt-4" style="background-color: blue; color: white; padding: 10px 15px; border-radius: 8px;"onclick="addToCart('book6', 'Whispers in the Dark', 19.50)">Add to Cart</button>
+                    <button class="btn-primary mt-2 text-sm" onclick="showBookDetails('book6', 'Whispers in the Dark', 'Agatha Christie Jr.', 19.50, 'Mystery, Thriller', '978-4-444444-44-4', 'A chilling mystery that will keep you guessing until the very end.')">Details</button>
+                </div>
+            </div>
+
+            <!-- Promotions -->
+            <h3 class="text-2xl font-semibold mb-4 primary-text">Current Promotions</h3>
+            <div class="bg-yellow-50 border-l-4 border-yellow-400 text-yellow-800 p-4 rounded-md mb-8" role="alert">
+                <p class="font-bold">Limited Time Offer!</p>
+                <p>Get 15% off on all academic books this week. Use code: ACADEMIC15</p>
+            </div>
+            <div class="bg-green-50 border-l-4 border-green-400 text-green-800 p-4 rounded-md mb-8" role="alert">
+                <p class="font-bold">New Customer Discount!</p>
+                <p>Sign up today and get 10% off your first order! Code: WELCOME10</p>
+            </div>
+
+            <!-- Categories -->
+            <h3 class="text-2xl font-semibold mb-4 primary-text">Browse by Category</h3>
+            <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
+                <button class="btn-primary py-3">Fiction</button>
+                <button class="btn-primary py-3">Non-Fiction</button>
+                <button class="btn-primary py-3">Academic</button>
+                <button class="btn-primary py-3">Children's</button>
+                <button class="btn-primary py-3">Science & Tech</button>
+                <button class="btn-primary py-3">History</button>
+                <button class="btn-primary py-3">Biography</button>
+                <button class="btn-primary py-3">Self-Help</button>
+                <button class="btn-primary py-3">Fantasy</button>
+                <button class="btn-primary py-3">Mystery</button>
+                <button class="btn-primary py-3">Romance</button>
+                <button class="btn-primary py-3">Thriller</button>
+            </div>
+        </section>
+
+        <!-- Shop/Books Page Section -->
+        <section id="shop" class="page-section bg-white rounded-lg shadow-md p-6 mb-8">
+            <h2 class="text-3xl font-bold mb-6 text-center">Our Book Collection</h2>
+
+            <!-- Filters -->
+            <div class="flex flex-col md:flex-row gap-4 mb-6 items-center justify-center">
+                <select class="p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    <option value="">Filter by Genre</option>
+                    <option value="fiction">Fiction</option>
+                    <option value="non-fiction">Non-Fiction</option>
+                    <option value="academic">Academic</option>
+                    <option value="childrens">Children's</option>
+                    <option value="science">Science & Tech</option>
+                    <option value="history">History</option>
+                    <option value="biography">Biography</option>
+                    <option value="self-help">Self-Help</option>
+                    <option value="fantasy">Fantasy</option>
+                    <option value="mystery">Mystery</option>
+                    <option value="romance">Romance</option>
+                    <option value="thriller">Thriller</option>
+                </select>
+                <input type="number" placeholder="Min Price" class="p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                <input type="number" placeholder="Max Price" class="p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                <input type="text" placeholder="Author Name" class="p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                <button class="btn-primary w-full md:w-auto">Apply Filters</button>
+            </div>
+
+            <!-- Book Listing Grid -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+                <!-- Example Book Item 1 -->
+                <div class="bg-gray-50 p-4 rounded-lg shadow-sm text-center">
+                    <img src="Assets/IMG-20250708-WA0012.jpg" alt="Book Title 1" class="mx-auto mb-3 rounded-md">
+                    <h4 class="text-xl font-semibold primary-text">Pride and Prejudice</h4>
+                    <p class="text-gray-600">by Keira Knightley</p>
+                    <p class="text-lg font-bold secondary-text mt-2">$19.99</p>
+                    <button class="btn-secondary mt-4" style="background-color: blue; color: white; padding: 10px 15px; border-radius: 8px;" onclick="addToCart('book7', 'Book Title One', 19.99)">Add to Cart</button>
+                    <button class="btn-primary mt-2 text-sm" onclick="showBookDetails('book7', 'Book Title One', 'Author A', 19.99, 'Fiction', '978-5-555555-55-5', 'A captivating narrative that explores the human condition.')">Details</button>
+                </div>
+                <div class="bg-gray-50 p-4 rounded-lg shadow-sm text-center">
+                    <img src="Assets/IMG-20250708-WA0013.jpg" alt="Book Title 2" class="mx-auto mb-3 rounded-md">
+                    <h4 class="text-xl font-semibold primary-text">Calculus Made Easy</h4>
+                    <p class="text-gray-600">by Silvanus .Thompson&nbsp;</p>
+                    <p class="text-lg font-bold secondary-text mt-2">$29.99</p>
+                    <button class="btn-secondary mt-4" style="background-color: blue; color: white; padding: 10px 15px; border-radius: 8px;" onclick="addToCart('book8', 'The Mystery of X', 29.99)">Add to Cart</button>
+                    <button class="btn-primary mt-2 text-sm" onclick="showBookDetails('book8', 'The Mystery of X', 'Author B', 29.99, 'Mystery', '978-6-666666-66-6', 'Unravel the secrets behind an ancient enigma.')">Details</button>
+                </div>
+                <div class="bg-gray-50 p-4 rounded-lg shadow-sm text-center">
+                    <img src="Assets/IMG-20250708-WA0014.jpg" alt="Book Title 3" class="mx-auto mb-3 rounded-md">
+                    <h4 class="text-xl font-semibold primary-text">Sapiens A Brief History of Humankind</h4>
+                    <p class="text-gray-600">Yuval Noah Harari</p>
+                    <p class="text-lg font-bold secondary-text mt-2">$15.00</p>
+                    <button class="btn-secondary mt-4" style="background-color: blue; color: white; padding: 10px 15px; border-radius: 8px;"onclick="addToCart('book9', 'Cooking for Dummies', 15.00)">Add to Cart</button>
+                    <button class="btn-primary mt-2 text-sm" onclick="showBookDetails('book9', 'Cooking for Dummies', 'Chef Gordon', 15.00, 'Cookbook, Reference', '978-7-777777-77-7', 'Learn to cook with simple, easy-to-follow recipes.')">Details</button>
+                </div>
+                <div class="bg-gray-50 p-4 rounded-lg shadow-sm text-center">
+                    <img src="Assets/IMG-20250708-WA0015.jpg" alt="Book Title 4" class="mx-auto mb-3 rounded-md">
+                    <h4 class="text-xl font-semibold primary-text">1984&nbsp;</h4>
+                    <p class="text-gray-600">George Orwell</p>
+                    <p class="text-lg font-bold secondary-text mt-2">$49.99</p>
+                    <button class="btn-secondary mt-4" style="background-color: blue; color: white; padding: 10px 15px; border-radius: 8px;"onclick="addToCart('book10', 'History of the World', 49.99)">Add to Cart</button>
+                    <button class="btn-primary mt-2 text-sm" onclick="showBookDetails('book10', 'History of the World', 'Dr. Historian', 49.99, 'History, Non-Fiction', '978-8-888888-88-8', 'A comprehensive overview of global history.')">Details</button>
+                </div>
+                <div class="bg-gray-50 p-4 rounded-lg shadow-sm text-center">
+                    <img src="Assets/IMG-20250708-WA0016.jpg" alt="Book Title 5" class="mx-auto mb-3 rounded-md">
+                    <h4 class="text-xl font-semibold primary-text">Project Management Essentials</h4>
+                    <p class="text-gray-600">JB wolf&nbsp;</p>
+                    <p class="text-lg font-bold secondary-text mt-2">$35.00</p>
+                    <button class="btn-secondary mt-4" style="background-color: blue; color: white; padding: 10px 15px; border-radius: 8px;"onclick="addToCart('book11', 'Coding Basics', 35.00)">Add to Cart</button>
+                    <button class="btn-primary mt-2 text-sm" onclick="showBookDetails('book11', 'Coding Basics', 'Tech Guru', 35.00, 'Technology, Education', '978-9-999999-99-9', 'Start your programming journey with this beginner-friendly guide.')">Details</button>
+                </div>
+                <div class="bg-gray-50 p-4 rounded-lg shadow-sm text-center">
+                    <img src="Assets/IMG-20250708-WA0017.jpg" alt="Book Title 6" class="mx-auto mb-3 rounded-md">
+                    <h4 class="text-xl font-semibold primary-text">Harry potter And The Philosopher,s Stone&nbsp;</h4>
+                    <p class="text-gray-600">by Epic Writer</p>
+                    <p class="text-lg font-bold secondary-text mt-2">$22.00</p>
+                    <button class="btn-secondary mt-4" style="background-color: blue; color: white; padding: 10px 15px; border-radius: 8px;"onclick="addToCart('book12', 'Fantasy Realms', 22.00)">Add to Cart</button>
+                    <button class="btn-primary mt-2 text-sm" onclick="showBookDetails('book12', 'Fantasy Realms', 'Epic Writer', 22.00, 'Fantasy, Adventure', '978-1-010101-01-0', 'Explore mythical lands and heroic quests.')">Details</button>
+                </div>
+                <!-- More books added below -->
+                <div class="bg-gray-50 p-4 rounded-lg shadow-sm text-center">
+                    <img src="Assets/IMG-20250708-WA0018.jpg" alt="Book Title 7" class="mx-auto mb-3 rounded-md">
+                    <h4 class="text-xl font-semibold primary-text">Art of War</h4>
+                    <p class="text-gray-600">Ralph D Sawyer</p>
+                    <p class="text-lg font-bold secondary-text mt-2">$18.99</p>
+                    <button class="btn-secondary mt-4" style="background-color: blue; color: white; padding: 10px 15px; border-radius: 8px;"onclick="addToCart('book13', 'The Art of Mindfulness', 18.99)">Add to Cart</button>
+                    <button class="btn-primary mt-2 text-sm" onclick="showBookDetails('book13', 'The Art of Mindfulness', 'Zen Master', 18.99, 'Self-Help, Spirituality', '978-1-121212-12-1', 'A guide to living in the present moment.')">Details</button>
+                </div>
+                <div class="bg-gray-50 p-4 rounded-lg shadow-sm text-center">
+                    <img src="Assets/IMG-20250708-WA0019.jpg" alt="Book Title 8" class="mx-auto mb-3 rounded-md">
+                    <h4 class="text-xl font-semibold primary-text">Introduction To Computer Science&nbsp;</h4>
+                    <p class="text-gray-600">Perry Donham</p>
+                    <p class="text-lg font-bold secondary-text mt-2">$32.50</p>
+                    <button class="btn-secondary mt-4" style="background-color: blue; color: white; padding: 10px 15px; border-radius: 8px;"onclick="addToCart('book14', 'Space Odyssey', 32.50)">Add to Cart</button>
+                    <button class="btn-primary mt-2 text-sm" onclick="showBookDetails('book14', 'Space Odyssey', 'Sci-Fi Author', 32.50, 'Science Fiction', '978-1-313131-31-3', 'An epic journey through the cosmos.')">Details</button>
+                </div>
+                <div class="bg-gray-50 p-4 rounded-lg shadow-sm text-center">
+                    <img src="Assets/IMG-20250708-WA0020.jpg" alt="Book Title 9" class="mx-auto mb-3 rounded-md">
+                    <h4 class="text-xl font-semibold primary-text">To Kill A Mockingbirds</h4>
+                    <p class="text-gray-600">Harper Lee</p>
+                    <p class="text-lg font-bold secondary-text mt-2">$10.00</p>
+                    <button class="btn-secondary mt-4"style="background-color: blue; color: white; padding: 10px 15px; border-radius: 8px;"onclick="addToCart('book15', 'The Secret Garden', 10.00)">Add to Cart</button>
+                    <button class="btn-primary mt-2 text-sm" onclick="showBookDetails('book15', 'The Secret Garden', 'Classic Writer', 10.00, 'Classic, Children\'s', '978-1-414141-41-4', 'A timeless tale of discovery and friendship.')">Details</button>
+                </div>
+                <div class="bg-gray-50 p-4 rounded-lg shadow-sm text-center">
+                    <img src="Assets/IMG-20250708-WA0021.jpg" alt="Book Title 10" class="mx-auto mb-3 rounded-md">
+                    <h4 class="text-xl font-semibold primary-text">The Great Cats by</h4>
+                    <p class="text-gray-600">Jesmyn ward&nbsp;</p>
+                    <p class="text-lg font-bold secondary-text mt-2">$55.00</p>
+                    <button class="btn-secondary mt-4" style="background-color: blue; color: white; padding: 10px 15px; border-radius: 8px;"onclick="addToCart('book16', 'Advanced Algorithms', 55.00)">Add to Cart</button>
+                    <button class="btn-primary mt-2 text-sm" onclick="showBookDetails('book16', 'Advanced Algorithms', 'Prof. Code', 55.00, 'Computer Science, Academic', '978-1-515151-51-5', 'Master complex algorithms with this in-depth guide.')">Details</button>
+                </div>
+                <div class="bg-gray-50 p-4 rounded-lg shadow-sm text-center">
+                    <img src="Assets/IMG-20250708-WA0025.jpg" alt="Book Title 11" class="mx-auto mb-3 rounded-md">
+                    <h4 class="text-xl font-semibold primary-text">The Lord Of The Rings&nbsp; &nbsp; &nbsp;&nbsp;</h4>
+                    <p class="text-gray-600">J.R.R Tolkien&nbsp;</p>
+                    <p class="text-lg font-bold secondary-text mt-2">$48.00</p>
+                    <button class="btn-secondary mt-4" style="background-color: blue; color: white; padding: 10px 15px; border-radius: 8px;"onclick="addToCart('book17', 'World History Vol. 2', 48.00)">Add to Cart</button>
+                    <button class="btn-primary mt-2 text-sm" onclick="showBookDetails('book17', 'World History Vol. 2', 'Dr. Historian', 48.00, 'History, Academic', '978-1-616161-61-6', 'Continuing the journey through global historical events.')">Details</button>
+                </div>
+                <div class="bg-gray-50 p-4 rounded-lg shadow-sm text-center">
+                    <img src="Assets/IMG-20250708-WA0023.jpg" alt="Book Title 12" class="mx-auto mb-3 rounded-md">
+                    <h4 class="text-xl font-semibold primary-text">The Book Thief</h4>
+                    <p class="text-gray-600">Markus Zusak</p>
+                    <p class="text-lg font-bold secondary-text mt-2">$26.00</p>
+                    <button class="btn-secondary mt-4" style="background-color: blue; color: white; padding: 10px 15px; border-radius: 8px;"onclick="addToCart('book18', 'The Culinary Handbook', 26.00)">Add to Cart</button>
+                    <button class="btn-primary mt-2 text-sm" onclick="showBookDetails('book18', 'The Culinary Handbook', 'Master Chef', 26.00, 'Cookbook, Reference', '978-1-717171-71-7', 'A complete guide to culinary arts and techniques.')">Details</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Book Details Page Section -->
+        <section id="book-details" class="page-section bg-white rounded-lg shadow-md p-6 mb-8">
+            <h2 class="text-3xl font-bold mb-6 text-center" id="detail-book-title-main">Book Title: The Enchanted Forest</h2>
+
+            <div class="flex flex-col md:flex-row gap-8 items-center md:items-start">
+                <!-- Book Cover -->
+                <div class="flex-shrink-0">
+                    <img src="https://placehold.co/250x350/FDBA74/1E3A8A?text=Book+Cover" alt="Book Cover" class="rounded-lg shadow-md" id="detail-book-image">
+                </div>
+                <!-- Book Information -->
+                <div class="flex-grow">
+                    <h3 class="text-2xl font-semibold primary-text mb-2" id="detail-book-title">The Enchanted Forest</h3>
+                    <p class="text-gray-700 text-lg mb-2"><strong>Author:</strong> <span id="detail-book-author">Luna Evergreen</span></p>
+                    <p class="text-gray-700 text-lg mb-4"><strong>Price:</strong> <span class="text-2xl font-bold secondary-text" id="detail-book-price">$27.50</span></p>
+                    <p class="text-gray-700 text-lg mb-4"><strong>Genre:</strong> <span id="detail-book-genre">Fantasy, Adventure</span></p>
+                    <p class="text-gray-700 text-lg mb-4"><strong>ISBN:</strong> <span id="detail-book-isbn">978-1-234567-89-0</span></p>
+
+
+                    <h4 class="text-xl font-semibold primary-text mb-2">Description:</h4>
+                    <p class="text-gray-600 mb-4" id="detail-book-description">
+                        A captivating tale of magic, mystery, and adventure deep within an ancient, enchanted forest. Follow Elara as she uncovers forgotten secrets and confronts mythical creatures to save her homeland. Perfect for fantasy lovers of all ages. This epic journey will transport you to a world filled with wonder, danger, and unexpected friendships.
+                    </p>
+
+                    <h4 class="text-xl font-semibold primary-text mb-2">Reviews:</h4>
+                    <div class="bg-gray-50 p-4 rounded-lg mb-4">
+                        <p class="font-semibold">⭐⭐⭐⭐⭐ - "Absolutely magical!"</p>
+                        <p class="text-gray-600 text-sm">"I couldn't put this book down. The world-building is incredible and the characters are so engaging. A must-read for anyone who loves a good fantasy!" - A Happy Reader (Verified Purchase)</p>
+                    </div>
+                    <div class="bg-gray-50 p-4 rounded-lg mb-4">
+                        <p class="font-semibold">⭐⭐⭐⭐ - "A delightful read."</p>
+                        <p class="text-gray-600 text-sm">"Enjoyed the journey, though some parts felt a bit rushed. Still highly recommend for its unique plot and charming characters." - Bookworm Bob</p>
+                    </div>
+                    <div class="bg-gray-50 p-4 rounded-lg mb-4">
+                        <p class="font-semibold">⭐⭐⭐⭐⭐ - "My new favorite!"</p>
+                        <p class="text-gray-600 text-sm">"This book exceeded all my expectations. The plot twists kept me on the edge of my seat!" - Avid Reader 22</p>
+                    </div>
+
+                    <button class="btn-primary text-xl px-6 py-3 mt-4"  id="add-to-cart-detail-page-btn" onclick="addToCartFromDetails()">Add to Cart</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Cart & Checkout Page Section -->
+        <section id="cart-checkout" class="page-section bg-white rounded-lg shadow-md p-6 mb-8">
+            <h2 class="text-3xl font-bold mb-6 text-center">Your Shopping Cart</h2>
+
+            <div class="overflow-x-auto mb-8">
+                <table class="min-w-full bg-white border border-gray-200 rounded-lg">
+                    <thead>
+                        <tr class="bg-gray-100 primary-text">
+                            <th class="py-3 px-4 text-left border-b">Item</th>
+                            <th class="py-3 px-4 text-left border-b">Price</th>
+                            <th class="py-3 px-4 text-left border-b">Quantity</th>
+                            <th class="py-3 px-4 text-left border-b">Total</th>
+                            <th class="py-3 px-4 text-left border-b"></th>
+                        </tr>
+                    </thead>
+                    <tbody id="cart-items-table-body">
+                        <!-- Cart items will be dynamically inserted here by JavaScript -->
+                        <tr>
+                            <td colspan="5" class="py-4 text-center text-gray-500">Your cart is empty.</td>
+                        </tr>
+                    </tbody>
+                    <tfoot>
+                        <tr>
+                            <td colspan="3" class="py-3 px-4 text-right font-bold">Subtotal:</td>
+                            <td class="py-3 px-4 font-bold" id="cart-subtotal">$0.00</td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td colspan="3" class="py-3 px-4 text-right font-bold">Shipping:</td>
+                            <td class="py-3 px-4 font-bold" id="cart-shipping">$5.00</td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td colspan="3" class="py-3 px-4 text-right font-bold text-2xl primary-text">Grand Total:</td>
+                            <td class="py-3 px-4 font-bold text-2xl secondary-text" id="cart-grand-total">$5.00</td>
+                            <td></td>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
+
+            <h3 class="text-2xl font-semibold mb-4 primary-text text-center">Delivery Information</h3>
+            <form class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+                <div>
+                    <label for="fullName" class="block text-gray-700 text-sm font-bold mb-2">Full Name:</label>
+                    <input type="text" id="fullName" class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="John Doe">
+                </div>
+                <div>
+                    <label for="address" class="block text-gray-700 text-sm font-bold mb-2">Delivery Address:</label>
+                    <input type="text" id="address" class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="123 Main St, Anytown">
+                </div>
+                <div>
+                    <label for="city" class="block text-gray-700 text-sm font-bold mb-2">City:</label>
+                    <input type="text" id="city" class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Anytown">
+                </div>
+                <div>
+                    <label for="state" class="block text-gray-700 text-sm font-bold mb-2">State/Province:</label>
+                    <input type="text" id="state" class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="State">
+                </div>
+                <div>
+                    <label for="zip" class="block text-gray-700 text-sm font-bold mb-2">Zip Code:</label>
+                    <input type="text" id="zip" class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="12345">
+                </div>
+                <div>
+                    <label for="country" class="block text-gray-700 text-sm font-bold mb-2">Country:</label>
+                    <input type="text" id="country" class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Country">
+                </div>
+                <div>
+                    <label for="phone" class="block text-gray-700 text-sm font-bold mb-2">Phone Number:</label>
+                    <input type="tel" id="phone" class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="+1234567890">
+                </div>
+                <div>
+                    <label for="email" class="block text-gray-700 text-sm font-bold mb-2">Email:</label>
+                    <input type="email" id="email" class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="john.doe@example.com">
+                </div>
+            </form>
+
+            <h3 class="text-2xl font-semibold mb-4 primary-text text-center">Payment Options</h3>
+            <div class="flex flex-col gap-4 mb-8">
+                <label class="flex items-center bg-gray-50 p-4 rounded-lg shadow-sm cursor-pointer">
+                    <input type="radio" name="paymentMethod" value="creditCard" class="form-radio h-5 w-5 text-blue-600" checked>
+                    <span class="ml-3 text-lg font-medium">Credit/Debit Card</span>
+                    <img src="https://placehold.co/60x20/ffffff/000000?text=Cards" alt="Credit Card Icons" class="ml-auto">
+                </label>
+                <label class="flex items-center bg-gray-50 p-4 rounded-lg shadow-sm cursor-pointer">
+                    <input type="radio" name="paymentMethod" value="paypal" class="form-radio h-5 w-5 text-blue-600">
+                    <span class="ml-3 text-lg font-medium">PayPal</span>
+                    <img src="https://placehold.co/60x20/ffffff/000000?text=PayPal" alt="PayPal Icon" class="ml-auto">
+                </label>
+                <label class="flex items-center bg-gray-50 p-4 rounded-lg shadow-sm cursor-pointer">
+                    <input type="radio" name="paymentMethod" value="googlePay" class="form-radio h-5 w-5 text-blue-600">
+                    <span class="ml-3 text-lg font-medium">Google Pay</span>
+                    <img src="https://placehold.co/60x20/ffffff/000000?text=GPay" alt="Google Pay Icon" class="ml-auto">
+                </label>
+                <label class="flex items-center bg-gray-50 p-4 rounded-lg shadow-sm cursor-pointer">
+                    <input type="radio" name="paymentMethod" value="applePay" class="form-radio h-5 w-5 text-blue-600">
+                    <span class="ml-3 text-lg font-medium">Apple Pay</span>
+                    <img src="https://placehold.co/60x20/ffffff/000000?text=APay" alt="Apple Pay Icon" class="ml-auto">
+                </label>
+                <label class="flex items-center bg-gray-50 p-4 rounded-lg shadow-sm cursor-pointer">
+                    <input type="radio" name="paymentMethod" value="cashOnDelivery" class="form-radio h-5 w-5 text-blue-600">
+                    <span class="ml-3 text-lg font-medium">Cash on Delivery (COD)</span>
+                </label>
+            </div>
+
+            <div class="text-center">
+                <button class="btn-primary text-2xl px-8 py-4" onclick="processPayment()">Proceed to Payment</button>
+            </div>
+        </section>
+
+        <!-- Payment Success Page Section -->
+        <section id="payment-success" class="page-section bg-white rounded-lg shadow-md p-6 mb-8 text-center">
+            <h2 class="text-3xl font-bold mb-6 primary-text">🎉 Payment Successful! 🎉</h2>
+            <p class="text-xl text-gray-700 mb-4">Thank you for your purchase from BookNest!</p>
+            <p class="text-lg text-gray-600 mb-8">Your order has been placed successfully and will be processed shortly. You will receive an email confirmation with your order details.</p>
+            <p class="text-lg font-semibold primary-text mb-8">Your Order ID: <span class="secondary-text" id="order-id">BN20250708-XYZ</span></p>
+
+            <div class="receipt-section mb-8 text-left border border-gray-200 rounded-lg p-4">
+                <h3 class="text-2xl font-semibold primary-text mb-4 text-center">Order Summary</h3>
+                <table class="min-w-full bg-white">
+                    <thead>
+                        <tr class="bg-gray-100 primary-text">
+                            <th class="py-2 px-3 text-left border-b">Item</th>
+                            <th class="py-2 px-3 text-left border-b">Qty</th>
+                            <th class="py-2 px-3 text-right border-b">Price</th>
+                            <th class="py-2 px-3 text-right border-b">Total</th>
+                        </tr>
+                    </thead>
+                    <tbody id="receipt-items-table-body">
+                        <!-- Receipt items will be dynamically inserted here -->
+                    </tbody>
+                    <tfoot>
+                        <tr>
+                            <td colspan="3" class="py-2 px-3 text-right font-bold">Subtotal:</td>
+                            <td class="py-2 px-3 text-right font-bold" id="receipt-subtotal">$0.00</td>
+                        </tr>
+                        <tr>
+                            <td colspan="3" class="py-2 px-3 text-right font-bold">Shipping:</td>
+                            <td class="py-2 px-3 text-right font-bold" id="receipt-shipping">$5.00</td>
+                        </tr>
+                        <tr>
+                            <td colspan="3" class="py-2 px-3 text-right font-bold text-xl primary-text">Grand Total:</td>
+                            <td class="py-2 px-3 text-right font-bold text-xl secondary-text" id="receipt-grand-total">$5.00</td>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
+
+            <button class="btn-primary text-xl px-6 py-3" onclick="showPage('home')">Continue Shopping</button>
+            <button class="btn-secondary text-xl px-6 py-3 ml-4" onclick="showPage('order-history')">View Order History</button>
+        </section>
+
+        <!-- Contact Us Page Section -->
+        <section id="contact" class="page-section bg-white rounded-lg shadow-md p-6 mb-8">
+            <h2 class="text-3xl font-bold mb-6 text-center">Contact Us</h2>
+            <p class="text-center text-lg mb-8">Have questions or need assistance? Reach out to us!</p>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <!-- Contact Form -->
+                <div>
+                    <h3 class="text-2xl font-semibold primary-text mb-4">Send us a Message</h3>
+                    <form class="space-y-4">
+                        <div>
+                            <label for="contactName" class="block text-gray-700 text-sm font-bold mb-2">Your Name:</label>
+                            <input type="text" id="contactName" class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Your Name">
+                        </div>
+                        <div>
+                            <label for="contactEmail" class="block text-gray-700 text-sm font-bold mb-2">Your Email:</label>
+                            <input type="email" id="contactEmail" class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="your.email@example.com">
+                        </div>
+                        <div>
+                            <label for="contactSubject" class="block text-gray-700 text-sm font-bold mb-2">Subject:</label>
+                            <input type="text" id="contactSubject" class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Inquiry about...">
+                        </div>
+                        <div>
+                            <label for="contactMessage" class="block text-gray-700 text-sm font-bold mb-2">Message:</label>
+                            <textarea id="contactMessage" rows="5" class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Your message here..."></textarea>
+                        </div>
+                        <button type="submit" class="btn-primary w-full">Send Message</button>
+                    </form>
+                </div>
+
+                <!-- Contact Info & Map -->
+                <div>
+                    <h3 class="text-2xl font-semibold primary-text mb-4">Our Details</h3>
+                    <p class="mb-4"><strong>Email:</strong> <a href="mailto:info@booknest.com" class="text-blue-600 hover:underline">info@booknest.com</a></p>
+                    <p class="mb-4"><strong>Phone:</strong> +1 (555) 123-4567</p>
+                    <p class="mb-4"><strong>Address:</strong> 123 Bookworm Lane, Reading City, BK 98765</p>
+
+                    <h4 class="text-xl font-semibold primary-text mb-2">Follow Us:</h4>
+                    <div class="flex gap-4 mb-6">
+                        <a href="#" class="text-blue-700 hover:text-blue-900 text-4xl" title="Facebook">📘</a>
+                        <a href="#" class="text-blue-400 hover:text-blue-600 text-4xl" title="Twitter">🐦</a>
+                        <a href="#" class="text-pink-600 hover:text-pink-800 text-4xl" title="Instagram">📸</a>
+                    </div>
+
+                    <h4 class="text-xl font-semibold primary-text mb-2">Our Location:</h4>
+                    <!-- Placeholder for a map. In a real scenario, you'd embed Google Maps or similar. -->
+                    <div class="bg-gray-200 h-64 rounded-lg flex items-center justify-center text-gray-500 text-center">
+                        [Map Placeholder - Embed your map here]
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Optional: Login/Register Page Section -->
+        <section id="login-register" class="page-section bg-white rounded-lg shadow-md p-6 mb-8 max-w-md mx-auto">
+            <h2 class="text-3xl font-bold mb-6 text-center">Login / Register</h2>
+
+            <!-- Login Form -->
+            <div id="login-form" class="mb-8">
+                <h3 class="text-2xl font-semibold primary-text mb-4 text-center">Login to Your Account</h3>
+                <form class="space-y-4">
+                    <div>
+                        <label for="loginEmail" class="block text-gray-700 text-sm font-bold mb-2">Email:</label>
+                        <input type="email" id="loginEmail" class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="your.email@example.com">
+                    </div>
+                    <div>
+                        <label for="loginPassword" class="block text-gray-700 text-sm font-bold mb-2">Password:</label>
+                        <input type="password" id="loginPassword" class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="********">
+                    </div>
+                    <button type="submit" class="btn-primary w-full">Login</button>
+                </form>
+                <p class="text-center mt-4">Don't have an account? <button class="text-blue-600 hover:underline" onclick="toggleForm('register')">Register here</button></p>
+            </div>
+
+            <!-- Register Form -->
+            <div id="register-form" class="hidden">
+                <h3 class="text-2xl font-semibold primary-text mb-4 text-center">Create a New Account</h3>
+                <form class="space-y-4">
+                    <div>
+                        <label for="registerName" class="block text-gray-700 text-sm font-bold mb-2">Full Name:</label>
+                        <input type="text" id="registerName" class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Your Full Name">
+                    </div>
+                    <div>
+                        <label for="registerEmail" class="block text-gray-700 text-sm font-bold mb-2">Email:</label>
+                        <input type="email" id="registerEmail" class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="your.email@example.com">
+                    </div>
+                    <div>
+                        <label for="registerPassword" class="block text-gray-700 text-sm font-bold mb-2">Password:</label>
+                        <input type="password" id="registerPassword" class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="********">
+                    </div>
+                    <div>
+                        <label for="confirmPassword" class="block text-gray-700 text-sm font-bold mb-2">Confirm Password:</label>
+                        <input type="password" id="confirmPassword" class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="********">
+                    </div>
+                    <button type="submit" class="btn-primary w-full">Register</button>
+                </form>
+                <p class="text-center mt-4">Already have an account? <button class="text-blue-600 hover:underline" onclick="toggleForm('login')">Login here</button></p>
+            </div>
+        </section>
+
+        <!-- Optional: Order History Page Section -->
+        <section id="order-history" class="page-section bg-white rounded-lg shadow-md p-6 mb-8">
+            <h2 class="text-3xl font-bold mb-6 text-center">Your Order History</h2>
+            <p class="text-center text-lg mb-8">Track your past orders and reorder your favorites!</p>
+
+            <div class="space-y-6" id="order-history-list">
+                <!-- Order history items will be dynamically inserted here -->
+                <p class="text-center text-gray-500 mt-8">No past orders to display.</p>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer Section -->
+    <footer class="primary-bg text-white p-4 text-center shadow-inner mt-8">
+        <div class="container mx-auto">
+            <p>&copy; 2025 BookNest. All rights reserved.</p>
+            <p class="mt-2">Email: info@booknest.com | Phone: +94 77567546</p>
+            <div class="flex justify-center gap-4 mt-3">
+                <a href="#" class="text-white hover:text-gray-300 transition duration-200">Facebook</a>
+                <a href="#" class="text-white hover:text-gray-300 transition duration-200">Twitter</a>
+                <a href="#" class="text-white hover:text-gray-300 transition duration-200">Instagram</a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- JavaScript for Page Switching, Cart Management, and Payment -->
+    <script>
+        // Global array to store cart items
+        let cartItems = [];
+        const SHIPPING_COST = 5.00; // Define a constant for shipping cost
+
+        // Store the last viewed book details for the "Add to Cart" button on the details page
+        let currentBookDetails = {};
+
+        /**
+         * Function to show a specific page section and hide others.
+         * @param {string} pageId - The ID of the page section to show (e.g., 'home', 'shop').
+         */
+        function showPage(pageId) {
+            // Get all page sections
+            const pages = document.querySelectorAll('.page-section');
+            // Hide all page sections
+            pages.forEach(page => {
+                page.classList.remove('active');
+            });
+
+            // Show the requested page section
+            const activePage = document.getElementById(pageId);
+            if (activePage) {
+                activePage.classList.add('active');
+                window.scrollTo({ top: 0, behavior: 'smooth' }); // Scroll to top of the page
+
+                // Special handling for cart and order history pages to refresh content
+                if (pageId === 'cart-checkout') {
+                    renderCart();
+                } else if (pageId === 'order-history') {
+                    renderOrderHistory();
+                }
+            }
+        }
+
+        /**
+         * Function to toggle between login and register forms.
+         * @param {string} formType - 'login' or 'register'.
+         */
+        function toggleForm(formType) {
+            const loginForm = document.getElementById('login-form');
+            const registerForm = document.getElementById('register-form');
+
+            if (formType === 'login') {
+                loginForm.classList.remove('hidden');
+                registerForm.classList.add('hidden');
+            } else if (formType === 'register') {
+                loginForm.classList.add('hidden');
+                registerForm.classList.remove('hidden');
+            }
+        }
+
+        /**
+         * Adds a book to the cart or increments its quantity if already present.
+         * @param {string} id - Unique ID of the book.
+         * @param {string} title - Title of the book.
+         * @param {number} price - Price of the book.
+         */
+        function addToCart(id, title, price) {
+            const existingItem = cartItems.find(item => item.id === id);
+            if (existingItem) {
+                existingItem.quantity++;
+            } else {
+                cartItems.push({ id, title, price, quantity: 1 });
+            }
+            alertUser(`"${title}" added to cart!`); // Simple feedback
+            renderCart(); // Re-render cart display
+        }
+
+        /**
+         * Adds the currently viewed book from the details page to the cart.
+         */
+        function addToCartFromDetails() {
+            if (currentBookDetails.id) {
+                addToCart(currentBookDetails.id, currentBookDetails.title, currentBookDetails.price);
+            } else {
+                alertUser("No book selected to add to cart.");
+            }
+        }
+
+        /**
+         * Removes an item from the cart.
+         * @param {string} id - Unique ID of the book to remove.
+         */
+        function removeFromCart(id) {
+            cartItems = cartItems.filter(item => item.id !== id);
+            renderCart();
+            alertUser("Item removed from cart.");
+        }
+
+        /**
+         * Updates the quantity of a book in the cart.
+         * @param {string} id - Unique ID of the book.
+         * @param {number} newQuantity - The new quantity for the book.
+         */
+        function updateCartQuantity(id, newQuantity) {
+            const item = cartItems.find(item => item.id === id);
+            if (item) {
+                if (newQuantity <= 0) {
+                    removeFromCart(id);
+                } else {
+                    item.quantity = newQuantity;
+                }
+            }
+            renderCart();
+        }
+
+        /**
+         * Renders the cart items in the cart-checkout table.
+         */
+        function renderCart() {
+            const tableBody = document.getElementById('cart-items-table-body');
+            tableBody.innerHTML = ''; // Clear existing rows
+
+            let subtotal = 0;
+
+            if (cartItems.length === 0) {
+                tableBody.innerHTML = '<tr><td colspan="5" class="py-4 text-center text-gray-500">Your cart is empty.</td></tr>';
+                document.getElementById('cart-subtotal').textContent = `$0.00`;
+                document.getElementById('cart-grand-total').textContent = `$${SHIPPING_COST.toFixed(2)}`;
+                return;
+            }
+
+            cartItems.forEach(item => {
+                const itemTotal = item.price * item.quantity;
+                subtotal += itemTotal;
+
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td class="py-3 px-4 border-b">${item.title}</td>
+                    <td class="py-3 px-4 border-b">$${item.price.toFixed(2)}</td>
+                    <td class="py-3 px-4 border-b">
+                        <input type="number" value="${item.quantity}" min="1"
+                               class="w-16 p-1 border rounded"
+                               onchange="updateCartQuantity('${item.id}', parseInt(this.value))">
+                    </td>
+                    <td class="py-3 px-4 border-b">$${itemTotal.toFixed(2)}</td>
+                    <td class="py-3 px-4 border-b">
+                        <button class="text-red-500 hover:text-red-700 font-semibold" onclick="removeFromCart('${item.id}')">Remove</button>
+                    </td>
+                `;
+                tableBody.appendChild(row);
+            });
+
+            const grandTotal = subtotal + SHIPPING_COST;
+            document.getElementById('cart-subtotal').textContent = `$${subtotal.toFixed(2)}`;
+            document.getElementById('cart-grand-total').textContent = `$${grandTotal.toFixed(2)}`;
+        }
+
+        /**
+         * Displays the details of a specific book on the book-details page.
+         * @param {string} id - Unique ID of the book.
+         * @param {string} title - Title of the book.
+         * @param {string} author - Author of the book.
+         * @param {number} price - Price of the book.
+         * @param {string} genre - Genre of the book.
+         * @param {string} isbn - ISBN of the book.
+         * @param {string} description - Description of the book.
+         */
+        function showBookDetails(id, title, author, price, genre, isbn, description) {
+            currentBookDetails = { id, title, author, price, genre, isbn, description };
+
+            document.getElementById('detail-book-title-main').textContent = `Book Title: ${title}`;
+            document.getElementById('detail-book-image').src = `https://placehold.co/250x350/FDBA74/1E3A8A?text=${encodeURIComponent(title.replace(/\s/g, '+'))}`;
+            document.getElementById('detail-book-image').alt = title;
+            document.getElementById('detail-book-title').textContent = title;
+            document.getElementById('detail-book-author').textContent = author;
+            document.getElementById('detail-book-price').textContent = `$${price.toFixed(2)}`;
+            document.getElementById('detail-book-genre').textContent = genre;
+            document.getElementById('detail-book-isbn').textContent = isbn;
+            document.getElementById('detail-book-description').textContent = description;
+
+            // Update the "Add to Cart" button on the details page
+            const addToCartBtn = document.getElementById('add-to-cart-detail-page-btn');
+            addToCartBtn.onclick = () => addToCart(id, title, price);
+
+            showPage('book-details');
+        }
+
+        /**
+         * Simulates a payment process and shows the success page with a receipt.
+         */
+        function processPayment() {
+            if (cartItems.length === 0) {
+                alertUser("Your cart is empty. Please add items before proceeding to payment.");
+                return;
+            }
+
+            // In a real application, this would involve sending data to a backend
+            // for payment processing. For this HTML-only example, we'll simulate success.
+
+            // Simulate a short delay for processing
+            setTimeout(() => {
+                generateReceipt(); // Generate the receipt before showing the page
+                showPage('payment-success'); // Show the payment success page
+                cartItems = []; // Clear the cart after successful payment
+                renderCart(); // Update cart display (now empty)
+            }, 500); // 0.5 second delay
+        }
+
+        /**
+         * Generates the receipt on the payment success page based on current cart items.
+         */
+        function generateReceipt() {
+            const receiptTableBody = document.getElementById('receipt-items-table-body');
+            receiptTableBody.innerHTML = ''; // Clear existing rows
+
+            let subtotal = 0;
+            const orderId = 'BN' + Date.now().toString().slice(-10); // Simple unique ID
+
+            cartItems.forEach(item => {
+                const itemTotal = item.price * item.quantity;
+                subtotal += itemTotal;
+
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td class="py-2 px-3 border-b">${item.title}</td>
+                    <td class="py-2 px-3 border-b">${item.quantity}</td>
+                    <td class="py-2 px-3 border-b text-right">$${item.price.toFixed(2)}</td>
+                    <td class="py-2 px-3 border-b text-right">$${itemTotal.toFixed(2)}</td>
+                `;
+                receiptTableBody.appendChild(row);
+            });
+
+            const grandTotal = subtotal + SHIPPING_COST;
+
+            document.getElementById('receipt-subtotal').textContent = `$${subtotal.toFixed(2)}`;
+            document.getElementById('receipt-shipping').textContent = `$${SHIPPING_COST.toFixed(2)}`;
+            document.getElementById('receipt-grand-total').textContent = `$${grandTotal.toFixed(2)}`;
+            document.getElementById('order-id').textContent = orderId;
+
+            // Optionally, add this order to history (for demonstration)
+            addOrderToHistory({
+                id: orderId,
+                date: new Date().toLocaleDateString(),
+                items: JSON.parse(JSON.stringify(cartItems)), // Deep copy cart items
+                total: grandTotal.toFixed(2)
+            });
+        }
+
+        // --- Order History Management (for demonstration) ---
+        let orderHistory = []; // Stores past orders
+
+        /**
+         * Adds a completed order to the order history.
+         * @param {object} order - The order object to add.
+         */
+        function addOrderToHistory(order) {
+            orderHistory.push(order);
+            // In a real app, this would be saved to a database.
+        }
+
+        /**
+         * Renders the order history on the order-history page.
+         */
+        function renderOrderHistory() {
+            const orderHistoryList = document.getElementById('order-history-list');
+            orderHistoryList.innerHTML = ''; // Clear existing content
+
+            if (orderHistory.length === 0) {
+                orderHistoryList.innerHTML = '<p class="text-center text-gray-500 mt-8">No past orders to display.</p>';
+                return;
+            }
+
+            orderHistory.forEach(order => {
+                const orderDiv = document.createElement('div');
+                orderDiv.className = 'border border-gray-200 rounded-lg p-4 shadow-sm';
+                let itemsHtml = order.items.map(item => `<li class="text-gray-700">${item.title} (x${item.quantity}) - $${(item.price * item.quantity).toFixed(2)}</li>`).join('');
+
+                orderDiv.innerHTML = `
+                    <div class="flex justify-between items-center mb-3">
+                        <h3 class="text-xl font-semibold primary-text">Order #${order.id}</h3>
+                        <span class="text-gray-600">Date: ${order.date}</span>
+                    </div>
+                    <ul class="list-disc list-inside mb-4">
+                        ${itemsHtml}
+                    </ul>
+                    <div class="flex justify-between items-center">
+                        <span class="text-lg font-bold">Total: $${order.total}</span>
+                        <button class="btn-secondary px-4 py-2 text-sm">View Details</button>
+                    </div>
+                `;
+                orderHistoryList.appendChild(orderDiv);
+            });
+        }
+
+        /**
+         * Simple custom alert function (replaces window.alert).
+         * For a real app, you'd use a modal or toast notification.
+         * @param {string} message - The message to display.
+         */
+        function alertUser(message) {
+            console.log("Alert:", message); // For demonstration, log to console
+            // In a real UI, you might temporarily show a div with the message.
+            // Example (requires an element like <div id="message-box" class="fixed top-4 right-4 bg-green-500 text-white p-3 rounded shadow-lg hidden"></div>)
+            // const msgBox = document.getElementById('message-box');
+            // if (msgBox) {
+            //     msgBox.textContent = message;
+            //     msgBox.classList.remove('hidden');
+            //     setTimeout(() => msgBox.classList.add('hidden'), 3000);
+            // }
+        }
+
+
+        // Initialize by showing the home page when the script loads
+        document.addEventListener('DOMContentLoaded', () => {
+            showPage('home');
+            renderCart(); // Initial render of an empty cart
+            renderOrderHistory(); // Initial render of empty order history
+        });
+    </script>
+</body>
+</html>
